@@ -27,8 +27,22 @@ EOF
 chmod +x ~/bin/autoGIT
 
 # Add alias to ~/.bashrc for running autoGIT as autoGIT
-echo "alias autoGIT='~/bin/autoGIT'" >> ~/.bashrc
-source ~/.bashrc
+if ! grep -q 'alias autoGIT=' ~/.bashrc; then
+  echo "alias autoGIT='~/bin/autoGIT'" >> ~/.bashrc
+  source ~/.bashrc
+fi
+
+# Ask user for GitHub API secret key and username
+read -p "Enter your GitHub API secret key: " api_key
+read -p "Enter your GitHub username: " username
+
+# Create secrets.ini file with the provided information
+cat > "$script_dir/secrets.ini" <<EOF
+[github]
+token = $api_key
+owner = $username
+EOF
 
 echo "autoGIT script created successfully in the ~/bin directory."
 echo "Alias 'autoGIT' added to your shell configuration. You can now run 'autoGIT' from anywhere."
+echo "secrets.ini file created with your GitHub API secret key and username."
